@@ -1,4 +1,5 @@
 export class UserData {
+  userId : number;
   firstName: string;
   lastName: string;
   username: string;
@@ -8,3 +9,4 @@ export class UserData {
   location: string;
   profileImageUrl: string;
 }
+
