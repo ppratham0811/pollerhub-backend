@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Post {
+export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -26,6 +26,27 @@ export class Post {
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   profileImageUrl: string;
+
+  @Column({ default: false })
+  isEmailVerified: boolean;
+
+  @Column({ default: false })
+  isPhoneVerified: boolean;
+
+  @Column({ default: 'User' })
+  role: string;
+
+  @Column({ default: '' })
+  bio: string;
+
+  @Column('text', { array: true, default: [] })
+  posts: string[];
+
+  @Column('text', { array: true, default: [] })
+  followers: number[];
+
+  @Column('text', { array: true, default: [] })
+  following: number[];
 }
