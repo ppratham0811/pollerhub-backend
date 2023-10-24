@@ -1,6 +1,6 @@
 export class UploadPostDto {
   userId: string;
-  image: string;
+  images: string[];
   caption: string;
 }
 

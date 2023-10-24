@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { CommentSchema } from 'src/DTO';
+import { CommentSchema } from '../DTO';
 
 @Entity()
 export class Post {

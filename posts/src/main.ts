@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { PostModule } from './post.module';
+import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function startApplication() {
-  const app = await NestFactory.create<NestExpressApplication>(PostModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     abortOnError: false,
   });
   await app.listen(3000);
