@@ -11,9 +11,9 @@ export class Validator {
 
     //check for min length is 8 character
 
-    const hasLength = password.length-1 >=7 ? true:false;
+    const hasLength = password.length - 1 >= 7 ? true : false;
 
     // Return true if all conditions are met
-    return hasCharacter && hasNumber && hasSpecialChar&&hasLength;
+    return hasCharacter && hasNumber && hasSpecialChar && hasLength;
   };
 }

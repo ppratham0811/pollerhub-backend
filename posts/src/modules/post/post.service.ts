@@ -21,8 +21,8 @@ export class PostService {
     return this.postRepository.save(newPost);
   }
 
-  async updatePost(postId: number, postData: Partial<Post>): Promise<Post> {
-    return this.postRepository
+  async updatePost(postId: number, postData: Partial<Post>) {
+    await this.postRepository
       .createQueryBuilder()
       .update(Post)
       .set({
@@ -34,21 +34,39 @@ export class PostService {
       .execute();
   }
 
-  deletePost(postId: number) {
+  async deletePost(postId: number) {
     await this.postRepository
-      .createQueryBuilder('users')
+      .createQueryBuilder(POST_REPOSITORY)
       .softDelete()
       .where('postId = :id', { id: postId })
       .execute();
   }
 
-  likePost(postId: number): string {
-    console.log(postId);
-    return 'post liked';
+  async likePost(postId: number) {
+    const getPost = await this.postRepository.findOneBy({
+      postId,
+    });
+    await this.postRepository
+      .createQueryBuilder(POST_REPOSITORY)
+      .update(Post)
+      .set({
+        likes: getPost.likes + 1,
+      })
+      .where('postId = :id', { id: postId })
+      .execute();
   }
 
-  commentOnPost(postId: number, userId: string, comment: string): string {
-    console.log(postId, userId, comment);
-    return 'post comment';
+  async commentOnPost(postId: number, userId: string, comment: string) {
+    const getPost = await this.postRepository.findOneBy({ postId });
+    const allComments = getPost.comments;
+    allComments.push({ userId, comment });
+    await this.postRepository
+      .createQueryBuilder()
+      .update(Post)
+      .set({
+        comments: allComments,
+      })
+      .where('postId = :postId', { postId })
+      .execute();
   }
 }

@@ -18,7 +18,6 @@ import { ImageController } from './Controller/image.controller';
 import { Image } from './entities/Image.entity';
 import { ImageService } from './Services/Image.service';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,7 +37,7 @@ import { ImageService } from './Services/Image.service';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
+        port: configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
@@ -48,9 +47,8 @@ import { ImageService } from './Services/Image.service';
       }),
       inject: [ConfigService],
     }),
-  
   ],
-  controllers: [ 
+  controllers: [
     UserController,
     AuthController,
     EmailController,

@@ -28,7 +28,7 @@ export class PostController {
   @Put(':id/update')
   async updatePost(
     @Param('id') postId: number,
-    @Body() uploadPostDto: Partial<Post>,
+    @Body() uploadPostDto: Partial<typeof Post>,
   ) {
     return this.postService.updatePost(postId, uploadPostDto);
   }

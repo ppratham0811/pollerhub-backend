@@ -13,7 +13,7 @@
 //     @InjectRepository(User) private readonly userRepository: Repository<User>,
 //   ) {}
 //   async use(req: Request, res: Response, next: NextFunction) {
-    
+
 //     const validator = new Validator();
 
 //     // checking the correct formate of email
@@ -38,7 +38,7 @@
 //     //   checking for duplicate username
 //     const existingUsername = await this.userRepository.findOneBy({
 //       username: req.body.username,
-      
+
 //     });
 
 //     if (existingUsername) {
@@ -69,19 +69,25 @@ export class UpdateMiddleware implements NestMiddleware {
     const validator = new Validator();
 
     // Check if the email is being updated
-    const isEmailUpdated = req.body.email !== undefined && req.body.email !== null;
+    const isEmailUpdated =
+      req.body.email !== undefined && req.body.email !== null;
 
     // Check if the password is being updated
-    const isPasswordUpdated = req.body.password !== undefined && req.body.password !== null;
+    const isPasswordUpdated =
+      req.body.password !== undefined && req.body.password !== null;
 
     // Checking the correct format of email if it's being updated
     if (isEmailUpdated && !validate(req.body.email)) {
-      return res.status(401).json({ msg: constants.Email_Format_Not_Valid, success: false });
+      return res
+        .status(401)
+        .json({ msg: constants.Email_Format_Not_Valid, success: false });
     }
 
     // Checking strength of password if it's being updated
     if (isPasswordUpdated && !validator.validatePassword(req.body.password)) {
-      return res.status(401).json({ msg: constants.Password_invalid, success: false });
+      return res
+        .status(401)
+        .json({ msg: constants.Password_invalid, success: false });
     }
 
     // Checking if email is already exist if it's being updated
@@ -91,7 +97,9 @@ export class UpdateMiddleware implements NestMiddleware {
       });
 
       if (existingUserWithEmail) {
-        return res.status(401).json({ msg: constants.Email_Already_Exists, success: false });
+        return res
+          .status(401)
+          .json({ msg: constants.Email_Already_Exists, success: false });
       }
     }
 
@@ -102,7 +110,9 @@ export class UpdateMiddleware implements NestMiddleware {
       });
 
       if (existingUsername) {
-        return res.status(401).json({ msg: constants.UserName_Already_Exists, success: false });
+        return res
+          .status(401)
+          .json({ msg: constants.UserName_Already_Exists, success: false });
       }
     }
 
