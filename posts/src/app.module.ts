@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PostModule } from './modules/post/post.module';
-import { databaseProviders } from './database.providers';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostModule } from './post/post.module';
+import { typeormConfig } from './config/typeorm.config';
 @Module({
-  imports: [PostModule],
-  providers: [...databaseProviders],
+  imports: [TypeOrmModule.forRoot(typeormConfig), PostModule],
 })
 export class AppModule {}

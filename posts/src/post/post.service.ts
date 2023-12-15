@@ -1,30 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { UploadPostDto } from './DTO';
-import { Post } from './entities/post.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CommentSchema, UploadPostDto } from './DTO';
+import { PostEntity } from './post.entity';
 import { Repository } from 'typeorm/repository/Repository';
-import { POST_REPOSITORY } from 'src/constants';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(Post, POST_REPOSITORY)
-    private readonly postRepository: Repository<Post>,
+    @InjectRepository(PostEntity)
+    private readonly postRepository: Repository<PostEntity>,
   ) {}
 
-  async getAllPosts(): Promise<Post[]> {
+  async getAllPosts(): Promise<PostEntity[]> {
     return await this.postRepository.find();
   }
 
-  uploadNewPost(postData: UploadPostDto): Promise<Post> {
+  @UsePipes(ValidationPipe)
+  uploadNewPost(postData: UploadPostDto): Promise<PostEntity> {
     const newPost = this.postRepository.create(postData);
     return this.postRepository.save(newPost);
   }
 
-  async updatePost(postId: number, postData: Partial<Post>) {
+  async updatePost(postId: number, postData: Partial<PostEntity>) {
     await this.postRepository
       .createQueryBuilder()
-      .update(Post)
+      .update(PostEntity)
       .set({
         userId: postData.userId,
         caption: postData.caption,
@@ -36,7 +36,7 @@ export class PostService {
 
   async deletePost(postId: number) {
     await this.postRepository
-      .createQueryBuilder(POST_REPOSITORY)
+      .createQueryBuilder()
       .softDelete()
       .where('postId = :id', { id: postId })
       .execute();
@@ -47,8 +47,8 @@ export class PostService {
       postId,
     });
     await this.postRepository
-      .createQueryBuilder(POST_REPOSITORY)
-      .update(Post)
+      .createQueryBuilder()
+      .update(PostEntity)
       .set({
         likes: getPost.likes + 1,
       })
@@ -56,13 +56,14 @@ export class PostService {
       .execute();
   }
 
-  async commentOnPost(postId: number, userId: string, comment: string) {
+  @UsePipes(ValidationPipe)
+  async commentOnPost(postId: number, comment: CommentSchema) {
     const getPost = await this.postRepository.findOneBy({ postId });
     const allComments = getPost.comments;
-    allComments.push({ userId, comment });
+    allComments.push({ userId: comment.userId, comment: comment.comment });
     await this.postRepository
       .createQueryBuilder()
-      .update(Post)
+      .update(PostEntity)
       .set({
         comments: allComments,
       })

@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { CommentSchema } from '../DTO';
+import { CommentSchema } from './DTO';
 
-@Entity()
-export class Post {
+@Entity('posts')
+export class PostEntity {
   @PrimaryGeneratedColumn()
   postId: number;
 

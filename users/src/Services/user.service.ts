@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { Connection, Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import constants from 'src/constants/constant.message';
 import { UserData } from 'src/dto/DTO';
 import { EmailService } from './email.service';
@@ -74,15 +74,14 @@ export class UserService {
 
     // Check if loggedUser.userId is already in followedUser.followers
 
-    for (var i = 0; i < followedUser.followers.length; i++) {
+    for (let i = 0; i < followedUser.followers.length; i++) {
       if (followedUser.followers[i] == loggedUser.userId) {
         return { msg: 'already following', success: false };
       }
     }
 
-    await loggedUser.following.push(followedUser.userId);
-
-    await followedUser.followers.push(loggedUser.userId);
+    loggedUser.following.push(followedUser.userId);
+    followedUser.followers.push(loggedUser.userId);
 
     await this.userRepository.save([loggedUser, followedUser]);
 
